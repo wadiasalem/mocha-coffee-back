@@ -9,6 +9,10 @@ class Category_Employer extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+    ];
+
     function getEmployers(){
         return $this->hasMany(Employer::class,'category','id');
     }

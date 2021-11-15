@@ -9,6 +9,12 @@ class Product extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'stock',
+        'category',
+    ];
+
     function getCategory(){
         return $this->hasOne(Category_Product::class,'id','category');
     }

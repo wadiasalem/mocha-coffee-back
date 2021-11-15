@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryProductController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ProductController;
 use App\Http\Middleware\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -17,8 +18,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth:api','admin'])->group(function () {
-    Route::get('product', [CategoryProductController::class,'getall']);
+Route::middleware(['auth:api','admin'])
+->group(function () {
+
+
 });
 
 Route::get('loginrequired', function () {
@@ -27,3 +30,6 @@ Route::get('loginrequired', function () {
 
 Route::post('login', [LoginController::class,'login']);
 Route::post('register', [LoginController::class,'register']);
+
+Route::get('menu', [CategoryProductController::class,'get_menu']);
+Route::get('menu/product', [ProductController::class,'get_product_category']);

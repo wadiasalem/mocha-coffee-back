@@ -9,6 +9,11 @@ class Table extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'user',
+        'table_number'
+    ];
+
     function getUser(){
         return $this->hasOne(User::class,'id','user');
     }

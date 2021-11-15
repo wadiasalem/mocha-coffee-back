@@ -9,6 +9,11 @@ class Shop_detail extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'shop',
+        'gift',
+    ];
+
     function getShop(){
         return $this->hasOne(Shop::class,'id','shop');
     }

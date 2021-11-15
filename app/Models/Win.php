@@ -9,6 +9,11 @@ class Win extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'client',
+        'reword',
+    ];
+
     function getClient(){
         return $this->hasOne(Client::class,'id','client');
     }

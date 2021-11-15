@@ -17,6 +17,7 @@ class CreateCategoryProductsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('menu');
+            $table->string('url');
             $table->timestamps();
         });
     }

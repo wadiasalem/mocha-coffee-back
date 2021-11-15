@@ -9,6 +9,13 @@ class Commande extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'category',
+        'employer',
+        'table',
+        'client',
+    ];
+
     function getBuyer(){
         if($this->category == 'locally')
             return $this->hasOne(Table::class,'id','table');

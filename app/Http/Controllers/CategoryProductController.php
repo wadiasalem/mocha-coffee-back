@@ -4,14 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Category_Product;
 
+use function PHPUnit\Framework\isEmpty;
 
 class CategoryProductController extends Controller
 {
-    function getall(){
+    function get_menu(){
 
-        return response()->json([
-            'status' => 'success',
-            'data'=>Category_Product::all()
-        ],200);
+        $productes = Category_Product::all();
+        if(count($productes))
+            return response()->json([
+                'status' => 'success',
+                'data'=>$productes,
+            ],200);
+        else
+            return response()->json([
+                'status' => 'error',
+                'description'=>'no data found'
+            ],200);
     }
 }

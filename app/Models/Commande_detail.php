@@ -9,6 +9,11 @@ class Commande_detail extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'commande',
+        'product'
+    ];
+
     function getCommand(){
         return $this->hasOne(Command::class,'id','Command');
     }

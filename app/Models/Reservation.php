@@ -9,6 +9,13 @@ class Reservation extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'client',
+        'table',
+        'date_start',
+        'date_ent',
+    ];
+
     function getClient(){
         return $this->hasOne(Client::class,'id','client');
     }

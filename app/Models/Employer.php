@@ -9,6 +9,14 @@ class Employer extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'user',
+        'category',
+        'phone',
+        'cin',
+        'birthday',
+    ];
+    
     function getUser(){
         return $this->hasOne(User::class,'id','user');
     }
