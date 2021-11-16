@@ -18,6 +18,9 @@ class CreateGiftsTable extends Migration
             $table->string('name');
             $table->text('description');
             $table->integer('quantity',false,true);
+            $table->integer('price',false,true)
+                ->default(0);
+            $table->string('img');
             $table->timestamps();
         });
     }

@@ -28,8 +28,12 @@ Route::get('loginrequired', function () {
     return response()->json('loginrequired',202);
 })->name('login');
 
-Route::post('login', [LoginController::class,'login']);
-Route::post('register', [LoginController::class,'register']);
+Route::prefix('auth')
+    ->group(function(){
+    Route::post('login', [LoginController::class,'login']);
+    Route::post('register', [LoginController::class,'register']);
+});
+
 
 Route::get('menu', [CategoryProductController::class,'get_menu']);
 Route::get('menu/product', [ProductController::class,'get_product_category']);

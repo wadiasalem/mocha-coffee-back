@@ -17,6 +17,9 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->string('name');
             $table->integer('stock',false,true);
+            $table->integer('price',false,true)
+                ->default(0);
+            $table->string('img');
             $table->foreignId('category')
                     ->constrained('category__products')
                     ->onUpdate('cascade')

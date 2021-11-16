@@ -22,8 +22,7 @@ class LoginController extends Controller
         // validation of api parametre
         $validate = Validator::make($request->all(),[
             'login'=>'required|string',
-            'password'=>'String|required',
-            'remember' => 'required|boolean'
+            'password'=>'String|required'
         ]);
 
         if($validate->fails()){
