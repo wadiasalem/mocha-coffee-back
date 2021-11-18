@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryProductController;
+use App\Http\Controllers\GiftController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProductController;
 use App\Http\Middleware\Admin;
@@ -32,6 +33,12 @@ Route::prefix('auth')
     ->group(function(){
     Route::post('login', [LoginController::class,'login']);
     Route::post('register', [LoginController::class,'register']);
+});
+
+Route::prefix('gifts')
+    ->group(function(){
+        Route::get('/', [GiftController::class,'get_gifts']);
+        Route::get('filter', [GiftController::class,'get_gifts_filter']);
 });
 
 
