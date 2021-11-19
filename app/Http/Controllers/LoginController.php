@@ -53,7 +53,7 @@ class LoginController extends Controller
         $Token = Auth::user()->createToken('authToken')->accessToken;
 
         return response()->json([
-            'status' => 'sucess',
+            'status' => 'success',
             'user'=>Auth::user(),
             'access_token'=>$Token
         ],200);
@@ -98,14 +98,15 @@ class LoginController extends Controller
 
         $user = User::create($data);
         $client = Client::create([
+            'name'=> $data['name'],
             'user' => $user->id,
-            'points' => 0
+            'points' => 0,
         ]);
 
         $token = $user->createToken('api-application')->accessToken;
 
         return response()->json([
-            'status' => 'sucess',
+            'status' => 'success',
             'user' => $user,
             'more_data' => $client,
             'token' => $token

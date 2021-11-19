@@ -15,7 +15,7 @@ class Table extends Model
     ];
 
     function getUser(){
-        return $this->hasOne(User::class,'id','user');
+        return $this->belongsTo(User::class,'id','user');
     }
 
     function getReservations(){

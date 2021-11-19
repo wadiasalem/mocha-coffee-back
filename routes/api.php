@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\CategoryProductController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\GiftController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserController;
 use App\Http\Middleware\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +26,15 @@ Route::middleware(['auth:api','admin'])
 
 
 });
+
+Route::middleware('auth:api')
+->prefix('account')
+->group(function () {
+    Route::post('password-update', [UserController::class,'password_update']);
+    Route::post('client', [ClientController::class,'information_update']);
+});
+
+
 
 Route::get('loginrequired', function () {
     return response()->json('loginrequired',202);

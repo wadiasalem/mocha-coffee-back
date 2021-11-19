@@ -10,12 +10,14 @@ class Client extends Model
     use HasFactory;
 
     protected $fillable = [
+        'name',
         'user',
-        'points'
+        'points',
+        'phone'
     ];
 
     function getUser(){
-        return $this->hasOne(User::class,'id','user');
+        return $this->belongsTo(User::class,'id','user');
     }
 
     function getReservations(){

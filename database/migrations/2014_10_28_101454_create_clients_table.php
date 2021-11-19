@@ -15,12 +15,13 @@ class CreateClientsTable extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->integer('phone',false,true)->unique();
+            $table->integer('points',false,true);
             $table->foreignId('user')
                     ->constrained('users')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
-            $table->integer('phone',false,true)->unique();
-            $table->integer('points',false,true);
             $table->timestamps();
         });
     }

@@ -20,7 +20,6 @@ class User extends Authenticatable
     protected $fillable = [
         'user_name',
         'role',
-        'name',
         'email',
         'password',
     ];
@@ -45,15 +44,15 @@ class User extends Authenticatable
     ];
 
     function getRole(){
-        return $this->hasOne(Role::class,'id','role');
+        return $this->belongsTo(Role::class,'role','id');
     }
 
     function getMoreDetails(){
-        if(Role::find($this->role)->code == 1){
+        if(Role::find($this->role)->name == 'client'){
             return $this->hasOne(Client::class,'user','id');
-        }elseif(Role::find($this->role)->code == 2){
+        }elseif(Role::find($this->role)->name == 'table'){
             return $this->hasOne(Table::class,'user','id');
-        }elseif(Role::find($this->role)->code == 3){
+        }elseif(Role::find($this->role)->name == 'employer'){
             return $this->hasOne(Employer::class,'user','id');
         }
         

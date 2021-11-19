@@ -10,6 +10,7 @@ class Employer extends Model
     use HasFactory;
 
     protected $fillable = [
+        'name',
         'user',
         'category',
         'phone',
@@ -18,7 +19,7 @@ class Employer extends Model
     ];
     
     function getUser(){
-        return $this->hasOne(User::class,'id','user');
+        return $this->belongsTo(User::class,'id','user');
     }
 
     function getCategory(){

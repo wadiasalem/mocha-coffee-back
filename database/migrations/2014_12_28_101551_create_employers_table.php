@@ -15,6 +15,10 @@ class CreateEmployersTable extends Migration
     {
         Schema::create('employers', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->integer('phone',false,true)->unique();
+            $table->integer('cin',false,true)->unique();
+            $table->date('birthday');
             $table->foreignId('user')
                     ->constrained('users')
                     ->onUpdate('cascade')
@@ -23,9 +27,6 @@ class CreateEmployersTable extends Migration
                     ->constrained('category__employers')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
-            $table->integer('phone',false,true)->unique();
-            $table->integer('cin',false,true)->unique();
-            $table->date('birthday');
             $table->timestamps();
         });
     }
