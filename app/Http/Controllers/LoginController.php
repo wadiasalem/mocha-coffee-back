@@ -51,14 +51,32 @@ class LoginController extends Controller
         }
         
         $Token = Auth::user()->createToken('authToken')->accessToken;
-
-        return response()->json([
-            'status' => 'success',
-            'user'=>Auth::user(),
-            'access_token'=>$Token
-        ],200);
+        
+        if(Auth::user()->role == 2)
+        {
+            $client = Client::find(User::find(Auth::user()->id)->getMoreDetails->id);
+            return response()->json([
+                'status' => 'success',
+                'user'=>Auth::user(),
+                'client' => $client,
+                'access_token'=>$Token
+            ],200);
+        }else
+            return response()->json([
+                'status' => 'success',
+                'user'=>Auth::user(),
+                'access_token'=>$Token
+            ],200);
     }
 
+
+    function Logout(Request $request){
+        $request->user()
+                ->token()->delete();
+        return response()->json([
+            'status' => 'success',
+        ],200);
+    }
 
     
     /**
@@ -75,7 +93,10 @@ class LoginController extends Controller
         ]);
 
         if($Register->fails()){
-            return response()->json($Register->errors(),202);
+            return response()->json([
+                'status' => 'error',
+                'description' => $Register->errors()
+            ],409);
         }
 
         if(User::where('email',$request['email'])->get()->count()>0){
@@ -108,7 +129,7 @@ class LoginController extends Controller
         return response()->json([
             'status' => 'success',
             'user' => $user,
-            'more_data' => $client,
+            'client' => $client,
             'token' => $token
         ],201);
         

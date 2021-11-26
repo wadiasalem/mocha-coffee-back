@@ -37,9 +37,9 @@ class ProductesSeed extends Seeder
             ','category'=>'6'],
             ['name' => 'Roasted Chicken (150g serving)','stock'=>'100','price'=>'16','img'=>'http://127.0.0.1:8000/uploads/products/food/savoury/roastedChicken.png
             ','category'=>'9'],
-            ['name' => 'Animals Ice Cream','stock'=>'100','price'=>'3','img'=>'http://127.0.0.1:8000/uploads/products/drinks/food/snacks/iceCream.png
+            ['name' => 'Animals Ice Cream','stock'=>'100','price'=>'3','img'=>'http://127.0.0.1:8000/uploads/products/food/snacks/iceCream.png
             ','category'=>'8'],
-            ['name' => 'Ice Cream','stock'=>'100','price'=>'4','img'=>'http://127.0.0.1:8000/uploads/products/drinks/food/snacks/iceCreamAnimals.png
+            ['name' => 'Ice Cream','stock'=>'100','price'=>'4','img'=>'http://127.0.0.1:8000/uploads/products/food/snacks/iceCreamAnimals.png
             ','category'=>'8'],
             ['name' => 'Frozen Greek Yogurt','stock'=>'100','price'=>'21','img'=>'http://127.0.0.1:8000/uploads/products/food/yagurt/frozenGreekYogurt.png
             ','category'=>'10'],

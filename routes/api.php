@@ -44,6 +44,7 @@ Route::prefix('auth')
     ->group(function(){
     Route::post('login', [LoginController::class,'login']);
     Route::post('register', [LoginController::class,'register']);
+    Route::post('logout', [LoginController::class,'logout'])->middleware('auth:api');
 });
 
 Route::prefix('gifts')
