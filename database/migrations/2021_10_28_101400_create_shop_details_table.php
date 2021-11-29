@@ -23,6 +23,9 @@ class CreateShopDetailsTable extends Migration
                     ->constrained('gifts')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
+            $table->integer('quantity',false,true)
+                    ->default(1);
+                    
         });
     }
 

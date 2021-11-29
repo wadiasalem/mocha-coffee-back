@@ -26,7 +26,10 @@ class LoginController extends Controller
         ]);
 
         if($validate->fails()){
-            return response()->json($validate->errors(),202);
+            return response()->json([
+                'status' => 'error',
+                'description' => $validate->errors()
+            ],409);
         }
 
         //cheking the type of the login email or username
@@ -57,6 +60,7 @@ class LoginController extends Controller
             $client = Client::find(User::find(Auth::user()->id)->getMoreDetails->id);
             return response()->json([
                 'status' => 'success',
+                'description' => 'Connection successfully',
                 'user'=>Auth::user(),
                 'client' => $client,
                 'access_token'=>$Token
@@ -64,6 +68,7 @@ class LoginController extends Controller
         }else
             return response()->json([
                 'status' => 'success',
+                'description' => 'Connection successfully',
                 'user'=>Auth::user(),
                 'access_token'=>$Token
             ],200);
@@ -128,6 +133,7 @@ class LoginController extends Controller
 
         return response()->json([
             'status' => 'success',
+            'description'=>'Creation successfully',
             'user' => $user,
             'client' => $client,
             'token' => $token

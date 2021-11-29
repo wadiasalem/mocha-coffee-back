@@ -17,10 +17,20 @@ class ClientController extends Controller
                 'description'=>'invalid password'
             ],404);
         else{
-        $update = [
-            ($request->phone)?'phone' : null => $request->phone,
-            ($request->name)?'name' : null => $request->name,
-        ];
+            if(Client::where([
+                ['phone',$request['number']],
+                ['id','<>',User::find(Auth::user()->id)->getMoreDetails->id]
+                ])->get()->count()>0)
+                return response()->json([
+                    'status'=>'error',
+                    'description'=>'Phone number already taken'
+                ],404);
+
+            $update = [
+                'name'  => $request->name,
+                'phone' => $request->number,
+                'address' => $request->address,
+            ];
             Client::find(User::find(Auth::user()->id)->getMoreDetails->id)->update($update);
 
             return response()->json([

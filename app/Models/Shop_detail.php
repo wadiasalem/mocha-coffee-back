@@ -12,7 +12,10 @@ class Shop_detail extends Model
     protected $fillable = [
         'shop',
         'gift',
+        'quantity'
     ];
+
+    public $timestamps = false;
 
     function getShop(){
         return $this->hasOne(Shop::class,'id','shop');

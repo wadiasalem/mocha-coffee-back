@@ -13,7 +13,8 @@ class Client extends Model
         'name',
         'user',
         'points',
-        'phone'
+        'phone',
+        'address'
     ];
 
     function getUser(){
