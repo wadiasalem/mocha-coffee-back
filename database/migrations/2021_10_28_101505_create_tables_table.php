@@ -20,6 +20,10 @@ class CreateTablesTable extends Migration
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
             $table->integer('table_number',false,true)->unique();
+            $table->integer('x',false,true)
+            ->default(50);
+            $table->integer('y',false,true)
+            ->default(50);
             $table->timestamps();
         });
     }

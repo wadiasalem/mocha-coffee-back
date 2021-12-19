@@ -11,7 +11,8 @@ class Commande_detail extends Model
 
     protected $fillable = [
         'commande',
-        'product'
+        'product',
+        'quantity'
     ];
 
     function getCommand(){

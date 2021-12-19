@@ -7,6 +7,24 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+    function get_orders_byId(Request $request){
+        $result = [];
+        foreach ($request->order as $value) {
+            array_push($result,Product::find($value['product']));
+        }
+
+        if(count($result)){
+            return response()->json([
+                'status'=>'success',
+                'gifts'=>$result
+            ],200);
+        }else
+        return response()->json([
+            'status'=>'success',
+            'description'=>'no data found'
+        ],404);
+    }
+
     function get_product_category(Request $request){
         $data = Product::where('category',$request->id)
             ->get();

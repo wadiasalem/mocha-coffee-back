@@ -23,6 +23,8 @@ class CreateCommandeDetailsTable extends Migration
                 ->constrained('products')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
+            $table->integer('quantity',false,true)
+                ->default(1);
         });
     }
 

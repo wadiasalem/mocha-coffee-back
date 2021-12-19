@@ -12,13 +12,13 @@ class Commande extends Model
     protected $fillable = [
         'category',
         'employer',
-        'table',
+        'table_id',
         'client',
     ];
 
     function getBuyer(){
         if($this->category == 'locally')
-            return $this->hasOne(Table::class,'id','table');
+            return $this->hasOne(Table::class,'id','table_id');
         else
             return $this->hasOne(Client::class,'id','client');
     }

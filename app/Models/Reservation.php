@@ -11,9 +11,9 @@ class Reservation extends Model
 
     protected $fillable = [
         'client',
-        'table',
+        'table_id',
         'date_start',
-        'date_ent',
+        'date_end',
     ];
 
     function getClient(){
@@ -21,6 +21,6 @@ class Reservation extends Model
     }
 
     function getTable(){
-        return $this->hasOne(Table::class,'id','table');
+        return $this->hasOne(Table::class,'id','table_id');
     }
 }

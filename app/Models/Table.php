@@ -11,7 +11,9 @@ class Table extends Model
 
     protected $fillable = [
         'user',
-        'table_number'
+        'table_number',
+        'x',
+        'y'
     ];
 
     function getUser(){
@@ -19,10 +21,10 @@ class Table extends Model
     }
 
     function getReservations(){
-        return $this->hasMany(Reservation::class,'table','id');
+        return $this->hasMany(Reservation::class,'table_id','id');
     }
 
     function getCommands(){
-        return $this->hasMany(Command::class,'table','id');
+        return $this->hasMany(Command::class,'table_id','id');
     }
 }
