@@ -12,6 +12,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Dflydev\DotAccessData\Data;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -33,11 +34,13 @@ class TableController extends Controller
             ],404);
         }
     }
+
+
     function createTable(Request $request){
         $userData = [
             'user_name'=>$request->user_name,
             'email'=>$request->email,
-            'password'=>$request->password,
+            'password'=>Hash::make($request->password),
             'role' => 3
         ];
 
@@ -173,5 +176,20 @@ class TableController extends Controller
             'commandeData'=>$data,
             'toDayInCome'=>$dayTotal
         ],200);
+    }
+
+
+    function logoutCheck(Request $request){
+        if(!Hash::check( $request->password , Auth::user()->password))
+            return response()->json([
+                'status'=>'error',
+                'description'=>'password invalid'
+            ],404);
+        else{
+            return response()->json([
+                'status'=>'success',
+                'description'=>'password valid'
+            ],200);
+        }
     }
 }

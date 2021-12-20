@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\Employer;
 use App\Models\Role;
+use App\Models\Table;
 use App\Models\User;
 use Validator;
 use Illuminate\Http\Request;
@@ -55,24 +57,50 @@ class LoginController extends Controller
         
         $Token = Auth::user()->createToken('authToken')->accessToken;
         
-        if(Auth::user()->role == 2)
-        {
-            $client = Client::find(User::find(Auth::user()->id)->getMoreDetails->id);
-            return response()->json([
-                'status' => 'success',
-                'description' => 'Connection successfully',
-                'user'=>Auth::user(),
-                'client' => $client,
-                'access_token'=>$Token
-            ],200);
-        }else
-            return response()->json([
-                'status' => 'success',
-                'description' => 'Connection successfully',
-                'user'=>Auth::user(),
-                'access_token'=>$Token
-            ],200);
+        switch (Auth::user()->role) {
+            case 2:
+                $more = Client::find(User::find(Auth::user()->id)->getMoreDetails->id);
+                return response()->json([
+                    'status' => 'success',
+                    'description' => 'Connection successfully',
+                    'user'=>Auth::user(),
+                    'client' => $more,
+                    'access_token'=>$Token
+                    ],200);
+                break;
+            case 3:
+                $more = Table::find(User::find(Auth::user()->id)->getMoreDetails->id);
+                return response()->json([
+                    'status' => 'success',
+                    'description' => 'Connection successfully',
+                    'user'=>Auth::user(),
+                    'table' => $more,
+                    'access_token'=>$Token
+                    ],200);
+                break;
+            case 4:
+                $more = Employer::find(User::find(Auth::user()->id)->getMoreDetails->id);
+                return response()->json([
+                    'status' => 'success',
+                    'description' => 'Connection successfully',
+                    'user'=>Auth::user(),
+                    'employer' => $more,
+                    'access_token'=>$Token
+                    ],200);
+                break;
+            
+            default:
+                return response()->json([
+                    'status' => 'success',
+                    'description' => 'Connection successfully',
+                    'user'=>Auth::user(),
+                    'access_token'=>$Token
+                ],200);
+                break;
+        }
     }
+
+
 
 
     function Logout(Request $request){
@@ -83,7 +111,8 @@ class LoginController extends Controller
         ],200);
     }
 
-    
+
+
     /**
      * Register function 
      * @return error if not valid

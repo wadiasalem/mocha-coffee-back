@@ -66,4 +66,44 @@ class CommandeController extends Controller
         ],200);
         
     }
+
+    function buy(Request $request){
+        $commande= Commande::create([
+            'category'=>'local',
+            'table_id'=> User::find(Auth::user()->id)->getMoreDetails->id
+        ]);
+
+        $detail = [];
+
+        foreach ($request->items as $value) {
+            if($value){
+                $product = Product::find($value['id']);
+                if($product){
+                    $item = Commande_detail::create([
+                    'commande'=> $commande->id,
+                    'product' => $value['id'],
+                ]);
+                array_push($detail,$item);
+                }else{
+                    $commande->delete();
+                    foreach ($detail as $value) {
+                        $value->delete();
+                    }
+                    return response()->json([
+                        'status'=>'error',
+                        'description'=> $value['name'].' not exist'
+                    ],404);
+                }
+                
+            }
+            
+        }
+
+        return response()->json([
+            'status'=>'success',
+            'description'=>'Order successfully',
+            '1'=>$commande,
+            '2'=>$detail
+        ],200);
+    }
 }

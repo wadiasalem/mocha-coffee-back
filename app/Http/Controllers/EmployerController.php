@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Employer;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class EmployerController extends Controller
 {
@@ -12,7 +13,8 @@ class EmployerController extends Controller
         $userData = [
             'user_name'=>$request->user_name,
             'email'=>$request->email,
-            'password'=>$request->password,
+            'password'=>Hash::make($request->password),
+            'role' => 4
         ];
 
         $user  = User::create($userData);
@@ -34,6 +36,7 @@ class EmployerController extends Controller
                     'employer' => $employer
                 ],200);
             }else{
+                $user->delete();
                 return response()->json([
                     'status'=>'error',
                     'discription'=>'internal error in creating employer'
