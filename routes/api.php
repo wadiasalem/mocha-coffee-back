@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\command;
 use App\Http\Controllers\CategoryProductController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CommandeController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\TableController;
 use App\Http\Controllers\UserController;
 use App\Models\Reservation;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -76,7 +78,7 @@ Route::middleware(['auth:api'])
         Route::put('update-password',[TableController::class,'updatePassword']);
     });
 
-    //for admin
+    //for table
     Route::middleware([])
     ->prefix('table')
     ->group(function () {
@@ -84,6 +86,14 @@ Route::middleware(['auth:api'])
         Route::post('buy',[CommandeController::class,'buy']);
     });
 
+
+    //for employer
+    Route::middleware([])
+    ->prefix('employer')
+    ->group(function () {
+        Route::get('get-commands',[CommandeController::class,'getCommands_Employer']);
+        Route::post('get-products',[ProductController::class,'getProducts_Employer']);
+    });
 });
 
 

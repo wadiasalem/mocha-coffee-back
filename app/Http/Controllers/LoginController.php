@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category_Employer;
 use App\Models\Client;
 use App\Models\Employer;
 use App\Models\Role;
@@ -85,6 +86,7 @@ class LoginController extends Controller
                     'description' => 'Connection successfully',
                     'user'=>Auth::user(),
                     'employer' => $more,
+                    'category' => Category_Employer::find($more->category)->name,
                     'access_token'=>$Token
                     ],200);
                 break;

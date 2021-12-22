@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\command;
 use App\Models\Commande;
 use App\Models\Commande_detail;
 use App\Models\Product;
@@ -82,6 +83,7 @@ class CommandeController extends Controller
                     $item = Commande_detail::create([
                     'commande'=> $commande->id,
                     'product' => $value['id'],
+                    'quantity' => $value['quantity']
                 ]);
                 array_push($detail,$item);
                 }else{
@@ -102,8 +104,31 @@ class CommandeController extends Controller
         return response()->json([
             'status'=>'success',
             'description'=>'Order successfully',
-            '1'=>$commande,
-            '2'=>$detail
         ],200);
+    }
+
+    function getCommands_Employer(){
+        $commands = Commande::where('category','local')->get();
+        if($commands){
+            $data = [];
+            foreach ($commands as  $value) {
+                array_push($data,[
+                    'command' => $value,
+                    'table' => $value->getBuyer->table_number,
+                    'detail' => $value->getCommandDetails
+                ]);
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $data
+            ],200);
+        }else{
+            return response()->json([
+                'status' => 'error',
+                'description' => 'no Command Found'
+            ],404);
+        }
+        
     }
 }

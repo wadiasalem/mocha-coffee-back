@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use PhpParser\JsonDecoder;
+
+use function PHPUnit\Framework\isNull;
 
 class ProductController extends Controller
 {
@@ -38,5 +41,22 @@ class ProductController extends Controller
                 'status' => 'error',
                 'description'=>'no data found'
             ],200);
+    }
+
+    function getProducts_Employer(Request $request){
+        $detail= [] ;
+        foreach ($request->items as $value) {
+            
+            $product = Product::find($value['product']) ;
+            array_push($detail,[
+                'product' => $product,
+                'quantity' => $value['quantity']
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'products' => $detail
+        ],200);
     }
 }

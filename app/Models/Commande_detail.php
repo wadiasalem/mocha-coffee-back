@@ -16,7 +16,7 @@ class Commande_detail extends Model
     ];
 
     function getCommand(){
-        return $this->hasOne(Command::class,'id','Command');
+        return $this->belongsTo(Command::class,'id','Command');
     }
 
     function getProduct(){
