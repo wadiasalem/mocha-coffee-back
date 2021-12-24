@@ -7,8 +7,10 @@ use App\Models\Commande;
 use App\Models\Commande_detail;
 use App\Models\Product;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Date;
 
 class CommandeController extends Controller
 {
@@ -108,7 +110,13 @@ class CommandeController extends Controller
     }
 
     function getCommands_Employer(){
-        $commands = Commande::where('category','local')->get();
+        $user_category = User::find(Auth::user()->id)->getMoreDetails->category ;
+        if($user_category == 5){
+            $commands = Commande::where('category','local')->get();
+        }else{
+            $commands = Commande::where('category','delivery')->get();
+        }
+        
         if($commands){
             $data = [];
             foreach ($commands as  $value) {
@@ -130,5 +138,75 @@ class CommandeController extends Controller
             ],404);
         }
         
+    }
+
+
+    function getStat_Employer(){
+        $user = User::find(Auth::user()->id)->getMoreDetails->id ;
+        $date = Carbon::now();
+        $date->addHour(1);
+        $commands = Commande::where('employer',$user)->get();
+
+        $today = Commande::where([
+            ['employer',$user],
+            ['served_at','like',$date->format('Y-m-d').'%']
+            ])->get();
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'today' => count($today),
+                'total' => count($commands)
+            ]
+            ]);
+    }
+
+
+
+    function command_action(Request $request){
+        $commande = Commande::find($request->command);
+        
+        $employer = User::find(Auth::user()->id)->getMoreDetails->id ;
+        $date = Carbon::now();
+        $date->addHour(1);
+        $old = $commande->category ;
+        if($commande){
+            if($old == "local" || $old == "delivery" ){
+                $error = [];
+                if($request->toDo != "canceled"){
+                    $detail = $commande->getCommandDetails;
+                    foreach ($detail as $value) {
+                        if($value->quantity > $value->getProduct->stock)
+                        array_push($error,$value->getProduct);
+                        else
+                        $value->getProduct->update([
+                            'stock'=>($value->getProduct->stock - $value->quantity)
+                        ]);
+                    }
+                }
+                
+                
+                $commande->update([
+                    'category'=> $request->toDo,
+                    'employer' => $employer,
+                    'served_at' => $date->format('Y-m-d H:m:s')
+                ]);
+                event(new command($commande,$old));
+                return response()->json([
+                    'status' => 'success',
+                    'description' => 'Command '.$request->toDo,
+                    'error'=>$error
+                ],200);
+            }else{
+                return response()->json([
+                    'status' => 'error',
+                    'description' => 'Command already '.$request->toDo
+                ],404);
+            }
+        }else{
+            return response()->json([
+                'status' => 'error',
+                'description' => 'Command Not Found'
+            ],404);
+        }
     }
 }

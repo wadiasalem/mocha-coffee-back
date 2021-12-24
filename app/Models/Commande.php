@@ -6,6 +6,7 @@ use Illuminate\Broadcasting\Channel;
 use Illuminate\Database\Eloquent\BroadcastsEvents;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class Commande extends Model
 {
@@ -16,6 +17,7 @@ class Commande extends Model
         'employer',
         'table_id',
         'client',
+        'served_at'
     ];
 
     function getBuyer(){
@@ -36,27 +38,22 @@ class Commande extends Model
     public function broadcastOn($event)
     {
         if($this->category == 'local')
-        return match ($event) {
-            'created' => [new Channel('local')]
-        };
+            return [new Channel('local')];
         if($this->category == 'delivery')
-        return match ($event) {
-            'created' => [new Channel('delivery')]
-        };
+            return [new Channel('delivery')];
     }
 
     public function broadcastAs($event)
     {
-        return match ($event) {
-            'created' => 'created',
-        };
+        return $event ;
     }
     
     public function broadcastWith($event)
     {
         return [
             'command' => $this ,
-            'table' => $this->getBuyer,
+            'table' => $this->getBuyer->table_number,
+            'action' => $this->category
         ];
     }
 

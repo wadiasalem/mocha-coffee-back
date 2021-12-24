@@ -12,7 +12,7 @@ class Reword extends Model
     protected $fillable = [
         'name',
         'discription',
-        'quantity',
+        'image',
     ];
 
     function getWins(){

@@ -4,6 +4,7 @@ use App\Events\command;
 use App\Http\Controllers\CategoryProductController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CommandeController;
+use App\Http\Controllers\CommandeDetailController;
 use App\Http\Controllers\EmployerController;
 use App\Http\Controllers\GiftController;
 use App\Http\Controllers\LoginController;
@@ -72,10 +73,19 @@ Route::middleware(['auth:api'])
         Route::get('get-tables',[TableController::class,'getTables']);
         Route::get('get-table-info',[TableController::class,'tableInformation']);
         Route::post('create-table',[TableController::class,'createTable']);
-        Route::post('create-employer',[EmployerController::class,'createEmployer']);
         Route::delete('delete-table',[TableController::class,'deleteTable']);
-        Route::delete('delete-employer',[EmployerController::class,'deleteEmployer']);
         Route::put('update-password',[TableController::class,'updatePassword']);
+
+        Route::post('create-employer',[EmployerController::class,'createEmployer']);
+        Route::delete('delete-employer',[EmployerController::class,'deleteEmployer']);
+        Route::get('get-employers',[EmployerController::class,'getEmployers']);
+        Route::get('get-employerById',[EmployerController::class,'employerById']);
+
+        Route::get('InComeStat',[CommandeDetailController::class,'InComeStat']);
+        Route::get('get-gift-stock',[GiftController::class,'get_gifts']);
+        Route::get('get-product-stock',[ProductController::class,'getProductStock']);
+        Route::patch('update-product',[ProductController::class,'updateProduct']);
+        Route::patch('update-gift',[GiftController::class,'updateGift']);
     });
 
     //for table
@@ -91,8 +101,12 @@ Route::middleware(['auth:api'])
     Route::middleware([])
     ->prefix('employer')
     ->group(function () {
+        Route::get('get-reservations',[TableController::class,'getReservations']);
         Route::get('get-commands',[CommandeController::class,'getCommands_Employer']);
         Route::post('get-products',[ProductController::class,'getProducts_Employer']);
+        Route::get('get-stat',[CommandeController::class,'getStat_Employer']);
+        Route::patch('command-action',[CommandeController::class,'command_action']);
+        Route::get('get-detail',[CommandeDetailController::class,'getDetail']);
     });
 });
 

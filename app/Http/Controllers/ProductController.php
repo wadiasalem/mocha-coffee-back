@@ -19,7 +19,7 @@ class ProductController extends Controller
         if(count($result)){
             return response()->json([
                 'status'=>'success',
-                'gifts'=>$result
+                'products'=>$result
             ],200);
         }else
         return response()->json([
@@ -58,5 +58,38 @@ class ProductController extends Controller
             'status' => 'success',
             'products' => $detail
         ],200);
+    }
+
+    function getProductStock(){
+        $products = Product::all();
+        if(count($products))
+            return response()->json([
+                'status' => 'success',
+                'products'=>$products,
+            ],200);
+        else
+            return response()->json([
+                'status' => 'error',
+                'description'=>'no data found'
+            ],200);
+    }
+
+    function updateProduct(Request $request){
+        $product = Product::find($request->id);
+        if($product){
+            $product->update([
+                $request->toDo => $request->value
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'description' => 'Update Done',
+            ],200);
+        }else{
+            return response()->json([
+                'status' => 'error',
+                'description' => 'Product Not Found'
+            ],404);
+        }
     }
 }

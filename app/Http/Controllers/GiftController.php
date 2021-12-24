@@ -65,5 +65,24 @@ class GiftController extends Controller
                 'description'=>'no data found'
             ],200);
     }
+
+    function updateGift(Request $request){
+        $gift = Gift::find($request->id);
+        if($gift){
+            $gift->update([
+                $request->toDo => $request->value
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'description' => 'Update Done',
+            ],200);
+        }else{
+            return response()->json([
+                'status' => 'error',
+                'description' => 'Gift Not Found'
+            ],404);
+        }
+    }
     
 }

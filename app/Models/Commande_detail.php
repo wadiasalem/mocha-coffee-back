@@ -16,10 +16,10 @@ class Commande_detail extends Model
     ];
 
     function getCommand(){
-        return $this->belongsTo(Command::class,'id','Command');
+        return $this->belongsTo(Command::class,'command','id');
     }
 
     function getProduct(){
-        return $this->hasOne(Product::class,'id','Product');
+        return $this->belongsTo(Product::class,'product','id');
     }
 }

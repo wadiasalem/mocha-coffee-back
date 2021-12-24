@@ -13,6 +13,7 @@ class Gift extends Model
         'name',
         'discription',
         'quantity',
+        'price'
     ];
 
     function getShopDetails(){

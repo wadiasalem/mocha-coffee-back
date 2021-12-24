@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use App\Models\Commande;
 use App\Models\Commande_detail;
+use App\Models\Employer;
 use App\Models\Product;
 use App\Models\Reservation;
 use App\Models\Table;
@@ -133,17 +134,21 @@ class TableController extends Controller
         $data = [] ;
         $dayTotal = 0 ;
         foreach ($commandes as $value ) {
-            $detaill = Commande_detail::where('commande',$value->id)->get();
+            $detail = Commande_detail::where('commande',$value->id)->get();
             $total = 0 ;
-            foreach ($detaill as $value) {
-                $product = Product::find($value->product);
-                $total +=  $product->price * $value->quantity;
+            $detailData = [] ;
+            foreach ($detail as $det) {
+                $product = Product::find($det->product);
+                array_push($detailData,[
+                    'product' => $product->name,
+                    'quantity' => $det->quantity
+                ]);
+                $total +=  $product->price * $det->quantity;
             }
-            array_push($data,['commande'=>$value,'detaill'=>$detaill,'total'=>$total]);
+            $employer = Employer::find($value->employer)->name;
+            array_push($data,['commande'=>$value,'detaill'=>$detailData,'total'=>$total,'employer'=>$employer]);
             $dayTotal += $total ;
         }
-        //['table',$table->id],
-        //$reservations = Reservation::where('date_start',$date)->get();
 
         $reservations = DB::select(
             'select * from reservations where table_id = ? and date_end >= ?',
@@ -176,6 +181,49 @@ class TableController extends Controller
             'commandeData'=>$data,
             'toDayInCome'=>$dayTotal
         ],200);
+    }
+
+    function getReservations(){
+        $date = Carbon::now();
+        $date->addHour(1);
+        $reservations = DB::select(
+            'select * from reservations where date_start >= ?',
+            [$date->format('Y-m-d h:m:s')]);
+        
+            $reservationsDate = [];
+            foreach ($reservations as  $value) {
+                $client = Client::find($value->client) ;
+                $table = Table::find($value->table_id) ;
+                array_push($reservationsDate,[
+                    'data' => [
+                        'id' => $value->id,
+                        'client' => $value->client,
+                        'normal' => $value->normal,
+                        'child' => $value->child,
+                        'date_start' => $value->date_start,
+                        'date_end' => $value->date_end,
+                        
+                    ],
+                    'client' => [
+                        'name' => $client->name,
+                        'phone' => $client->phone,
+                    ] ,
+                    'table' => $table->table_number
+                ]);
+            }
+        
+        if(count($reservationsDate)){
+            return response()->json([
+                'status' => 'success',
+                'reservations' => $reservationsDate
+            ],200);
+        }else{
+            return response()->json([
+                'status' => 'error',
+                'description' => 'No Reservation Found'
+            ],404);
+        }
+
     }
 
 

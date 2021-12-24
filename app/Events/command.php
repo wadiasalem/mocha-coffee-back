@@ -16,14 +16,16 @@ class command implements ShouldBroadcast
 
 
     public $command ;
+    public $toDo ;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($command)
+    public function __construct($command,$toDo)
     {
         $this->command = $command ;
+        $this->toDo = $toDo ;
     }
 
     /**
@@ -33,16 +35,16 @@ class command implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('command');
+        return new Channel($this->toDo);
     }
 
     public function broadcastAs()
     {
-        return 'my-command';
+        return 'updated';
     }
 
     public function broadcastWith()
 {
-    return ['id' => $this->command];
+    return ['id' => $this->command->id];
 }
 }

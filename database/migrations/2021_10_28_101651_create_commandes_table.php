@@ -31,6 +31,9 @@ class CreateCommandesTable extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('cascade')
                 ->nullable();
+            $table->timestamp('served_at')
+                ->nullable(true)
+                ->default(null);
             $table->timestamps();
         });
     }

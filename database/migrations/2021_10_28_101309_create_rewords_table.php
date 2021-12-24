@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateRewordsTable extends Migration
@@ -17,9 +18,9 @@ class CreateRewordsTable extends Migration
             $table->id();
             $table->string('name');
             $table->text('description');
-            $table->integer('quantity',false,true);
             $table->timestamps();
         });
+        DB::statement("ALTER TABLE rewords ADD image MEDIUMBLOB");
     }
 
     /**

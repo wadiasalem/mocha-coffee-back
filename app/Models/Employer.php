@@ -23,7 +23,7 @@ class Employer extends Model
     }
 
     function getCategory(){
-        return $this->hasOne(Category_Employer::class,'id','category');
+        return $this->belongsTo(Category_Employer::class,'category','id');
     }
 
     function getCommands(){
