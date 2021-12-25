@@ -43,4 +43,12 @@ class ClientController extends Controller
     function add_point(){
         
     }
+
+    function getPoints(){
+        $client = Auth::user()->getMoreDetails->points ;
+        return response()->json([
+            'status'=>true,
+            'points'=>$client
+        ]);
+    }
 }

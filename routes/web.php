@@ -4,6 +4,7 @@ use App\Events\command;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,3 +16,8 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get("test",function(){
+  $path = 'public/rewords/IMG-20211216-WA0006-602563884-1640358263.jpg' ;
+  return Storage::size($path);
+});

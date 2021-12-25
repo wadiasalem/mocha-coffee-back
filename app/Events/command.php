@@ -45,6 +45,6 @@ class command implements ShouldBroadcast
 
     public function broadcastWith()
 {
-    return ['id' => $this->command->id];
+    return ['id' => $this->command];
 }
 }

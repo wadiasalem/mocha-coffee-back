@@ -10,6 +10,7 @@ use App\Http\Controllers\GiftController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\RewordController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\UserController;
@@ -57,9 +58,11 @@ Route::middleware(['auth:api'])
         Route::get('tables', [TableController::class,'getTables']);
         Route::get('reservations', [ReservationController::class,'getReservations']);
         Route::post('reserve', [ReservationController::class,'reserve']);
+        //user
+        Route::get('getPoints',[ClientController::class,'getPoints']);
     });
 
-    //account settings for client
+    //account settings
     Route::prefix(('account'))
     ->group(function () {
         Route::post('password-update', [UserController::class,'password_update']);
@@ -70,22 +73,26 @@ Route::middleware(['auth:api'])
     Route::middleware(['admin'])
     ->prefix('admin')
     ->group(function () {
+        //manage-table
         Route::get('get-tables',[TableController::class,'getTables']);
         Route::get('get-table-info',[TableController::class,'tableInformation']);
         Route::post('create-table',[TableController::class,'createTable']);
         Route::delete('delete-table',[TableController::class,'deleteTable']);
         Route::put('update-password',[TableController::class,'updatePassword']);
-
+        //manage-employers
         Route::post('create-employer',[EmployerController::class,'createEmployer']);
         Route::delete('delete-employer',[EmployerController::class,'deleteEmployer']);
         Route::get('get-employers',[EmployerController::class,'getEmployers']);
         Route::get('get-employerById',[EmployerController::class,'employerById']);
-
+        //manage-stock
         Route::get('InComeStat',[CommandeDetailController::class,'InComeStat']);
         Route::get('get-gift-stock',[GiftController::class,'get_gifts']);
         Route::get('get-product-stock',[ProductController::class,'getProductStock']);
         Route::patch('update-product',[ProductController::class,'updateProduct']);
         Route::patch('update-gift',[GiftController::class,'updateGift']);
+        //manage-rewords
+        Route::post('addReword',[RewordController::class,'addReword']);
+        Route::get('getRewords',[RewordController::class,'getRewordsAdmin']);
     });
 
     //for table
@@ -131,6 +138,8 @@ Route::middleware(['auth:api'])
         Route::get('/', [CategoryProductController::class,'get_menu']);
         Route::get('product', [ProductController::class,'get_product_category']);
     });
+    //rewords api
+    Route::get('rewords',[RewordController::class,'getRewordsClient']);
 
 
 

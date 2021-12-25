@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\command;
+use App\Models\Client;
 use App\Models\Commande;
 use App\Models\Commande_detail;
 use App\Models\Product;
@@ -11,6 +12,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
+
+use function PHPUnit\Framework\isNull;
 
 class CommandeController extends Controller
 {
@@ -71,14 +74,20 @@ class CommandeController extends Controller
     }
 
     function buy(Request $request){
+        $user = null ;
+        if(!is_null($request->client['email']))
+            $user = User::where('email',$request->client['email'])->first()->getMoreDetails->id;
+
+
         $commande= Commande::create([
             'category'=>'local',
-            'table_id'=> User::find(Auth::user()->id)->getMoreDetails->id
+            'table_id'=> User::find(Auth::user()->id)->getMoreDetails->id,
+            'client' => $user
         ]);
 
         $detail = [];
 
-        foreach ($request->items as $value) {
+        foreach ($request->order['items'] as $value) {
             if($value){
                 $product = Product::find($value['id']);
                 if($product){
@@ -122,7 +131,7 @@ class CommandeController extends Controller
             foreach ($commands as  $value) {
                 array_push($data,[
                     'command' => $value,
-                    'table' => $value->getBuyer->table_number,
+                    'buyer' => $value->getBuyer,
                     'detail' => $value->getCommandDetails
                 ]);
             }
@@ -169,28 +178,37 @@ class CommandeController extends Controller
         $date = Carbon::now();
         $date->addHour(1);
         $old = $commande->category ;
+
+
         if($commande){
             if($old == "local" || $old == "delivery" ){
                 $error = [];
                 if($request->toDo != "canceled"){
+                    $client = Client::find($commande->client) ;
                     $detail = $commande->getCommandDetails;
+                    $points = 0 ;
                     foreach ($detail as $value) {
                         if($value->quantity > $value->getProduct->stock)
                         array_push($error,$value->getProduct);
-                        else
-                        $value->getProduct->update([
+                        else{
+                            $value->getProduct->update([
                             'stock'=>($value->getProduct->stock - $value->quantity)
-                        ]);
+                            ]);
+                            $points += 3*$value->quantity;
+                        }
                     }
+                    if(!is_null($client))
+                        $client->update(['points'=>$client->points+$points]);
                 }
                 
-                
+
                 $commande->update([
                     'category'=> $request->toDo,
                     'employer' => $employer,
                     'served_at' => $date->format('Y-m-d H:m:s')
                 ]);
-                event(new command($commande,$old));
+
+                event(new command($commande->id,$old));
                 return response()->json([
                     'status' => 'success',
                     'description' => 'Command '.$request->toDo,

@@ -52,7 +52,7 @@ class Commande extends Model
     {
         return [
             'command' => $this ,
-            'table' => $this->getBuyer->table_number,
+            'buyer' => $this->getBuyer,
             'action' => $this->category
         ];
     }

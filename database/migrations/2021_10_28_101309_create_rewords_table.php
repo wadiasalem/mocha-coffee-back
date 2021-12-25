@@ -17,10 +17,13 @@ class CreateRewordsTable extends Migration
         Schema::create('rewords', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('image');
             $table->text('description');
+            $table->integer('points',false,true);
+            $table->dateTime('date_start');
+            $table->dateTime('date_end');
             $table->timestamps();
         });
-        DB::statement("ALTER TABLE rewords ADD image MEDIUMBLOB");
     }
 
     /**

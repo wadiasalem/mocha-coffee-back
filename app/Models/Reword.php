@@ -11,8 +11,11 @@ class Reword extends Model
 
     protected $fillable = [
         'name',
-        'discription',
+        'description',
         'image',
+        'points',
+        'date_start',
+        'date_end'
     ];
 
     function getWins(){
