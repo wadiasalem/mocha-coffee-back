@@ -2,12 +2,14 @@
 
 use App\Events\command;
 use App\Http\Controllers\CategoryProductController;
+use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\CommandeDetailController;
 use App\Http\Controllers\EmployerController;
 use App\Http\Controllers\GiftController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\passwordResetController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\RewordController;
@@ -118,11 +120,13 @@ Route::middleware(['auth:api'])
 });
 
 
-    //login api
+    //auth api
     Route::prefix('auth')
     ->group(function(){
         Route::post('login', [LoginController::class,'login']);
         Route::post('register', [LoginController::class,'register']);
+        Route::post('reset-password-request', [passwordResetController::class, 'sendPasswordResetEmail']);
+        Route::post('change-password', [ChangePasswordController::class, 'passwordResetProcess']);
     });
 
     // gifts api

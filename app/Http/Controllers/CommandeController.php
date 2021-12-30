@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\command;
+use App\Mail\CommandDoneMail;
 use App\Models\Client;
 use App\Models\Commande;
 use App\Models\Commande_detail;
@@ -12,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Mail;
 
 use function PHPUnit\Framework\isNull;
 
@@ -35,9 +37,10 @@ class CommandeController extends Controller
     }
 
     function clientOrder(Request $request){
+        $client = User::find(Auth::user()->id);
         $commande= Commande::create([
             'category'=>'delivery',
-            'client'=> User::find(Auth::user()->id)->getMoreDetails->id
+            'client'=> $client->getMoreDetails->id
         ]);
 
         $detail = [];
@@ -49,7 +52,8 @@ class CommandeController extends Controller
                     $item = Commande_detail::create([
                     'commande'=> $commande->id,
                     'product' => $value['id'],
-                ]);
+                    'quantity'=>$value['quantity'],
+                    ]);
                 array_push($detail,$item);
                 }else{
                     $commande->delete();
@@ -65,6 +69,8 @@ class CommandeController extends Controller
             }
             
         }
+
+        Mail::to($client->email)->send(new CommandDoneMail($detail,$client->name));
         
         return response()->json([
             'status'=>'success',
