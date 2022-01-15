@@ -17,6 +17,7 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\UserController;
 use App\Models\Reservation;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -145,5 +146,7 @@ Route::middleware(['auth:api'])
     //rewords api
     Route::get('rewords',[RewordController::class,'getRewordsClient']);
 
-
+    Route::get('role',function(){
+        return Role::all();
+    });
 
