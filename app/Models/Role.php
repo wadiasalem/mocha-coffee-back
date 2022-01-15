@@ -13,6 +13,8 @@ class Role extends Model
         'name',
     ];
 
+    public $timestamps = false;
+    
     function getUsers(){
         return $this->hasMany(User::class,'role','id');
     }

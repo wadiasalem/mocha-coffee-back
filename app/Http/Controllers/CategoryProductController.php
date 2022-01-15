@@ -20,6 +20,6 @@ class CategoryProductController extends Controller
             return response()->json([
                 'status' => 'error',
                 'description'=>'no data found'
-            ],200);
+            ],404);
     }
 }

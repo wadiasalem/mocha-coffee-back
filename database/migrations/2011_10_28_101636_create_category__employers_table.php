@@ -15,8 +15,8 @@ class CreateCategoryEmployersTable extends Migration
     {
         Schema::create('category__employers', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->timestamps();
+            $table->string('name')
+            ->unique();
         });
     }
 

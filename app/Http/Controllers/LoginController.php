@@ -41,7 +41,7 @@ class LoginController extends Controller
         : 'username';
 
         if($login_type == 'username'){
-            $email = User::where('user_name',$request['login']) -> first() -> email;
+            $email = User::where('user_name',$request['login']) -> first() ?-> email;
             $login = ['email'=>$email , 'password' => $request['password']] ;
         }else{
             $login = ['email'=>$request['login'] , 'password' => $request['password']] ;

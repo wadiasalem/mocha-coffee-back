@@ -13,6 +13,8 @@ class Category_Employer extends Model
         'name',
     ];
 
+    public $timestamps = false;
+
     function getEmployers(){
         return $this->hasMany(Employer::class,'category','id');
     }
