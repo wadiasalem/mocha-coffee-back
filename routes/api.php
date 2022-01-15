@@ -146,7 +146,3 @@ Route::middleware(['auth:api'])
     //rewords api
     Route::get('rewords',[RewordController::class,'getRewordsClient']);
 
-    Route::get('role',function(){
-        return Role::all();
-    });
-

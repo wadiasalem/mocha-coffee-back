@@ -20,7 +20,7 @@ class UserSeed extends Seeder
             'email'=>'admin@coffee.com',
             'user_name'=>'admin',
             'password'=>bcrypt('admin'),
-            'role'=>0
+            'role'=>1
         );
 
         User::create($admin);
