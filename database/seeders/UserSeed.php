@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Table;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class UserSeed extends Seeder
 {
@@ -26,19 +27,19 @@ class UserSeed extends Seeder
         User::create($admin);
 
         $tab = array(
-            array('x' => '20.50','y' => '65.00'),
-            array('x' => '25.00','y' => '60.50'),
-            array('x' => '30.00','y' => '56.00'),
-            array('x' => '34.50','y' => '51.50'),
-            array('x' => '39.50','y' => '47.00'),
-            array('x' => '44.50','y' => '42.50'),
-            array('x' => '60.00','y' => '34.00'),
-            array('x' => '77.00','y' => '55.00'),
-            array('x' => '55.00','y' => '55.00'),
-            array('x' => '50.00','y' => '83.00'),
-            array('x' => '66.00','y' => '68.00'),
-            array('x' => '39.00','y' => '70.00'),
-            array('x' => '49.50','y' => '38.00')
+            array('x' => 20.50,'y' => 65.00),
+            array('x' => 25.00,'y' => 60.50),
+            array('x' => 30.00,'y' => 56.00),
+            array('x' => 34.50,'y' => 51.50),
+            array('x' => 39.50,'y' => 47.00),
+            array('x' => 44.50,'y' => 42.50),
+            array('x' => 60.00,'y' => 34.00),
+            array('x' => 77.00,'y' => 55.00),
+            array('x' => 55.00,'y' => 55.00),
+            array('x' => 50.00,'y' => 83.00),
+            array('x' => 66.00,'y' => 68.00),
+            array('x' => 39.00,'y' => 70.00),
+            array('x' => 49.50,'y' => 38.00)
           );
         
         for ($i=0; $i < 13; $i++) { 
