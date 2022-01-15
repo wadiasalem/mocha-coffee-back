@@ -17,9 +17,9 @@ class UserSeed extends Seeder
     {
 
         $admin = array(
-            'email'=>env('ADMIN_EMAIL'),
-            'user_name'=>env('ADMIN_USER_NAME'),
-            'password'=>bcrypt(env('ADMIN_PASSWORD')),
+            'email'=>'admin@coffee.com',
+            'user_name'=>'admin',
+            'password'=>bcrypt('admin'),
             'role'=>0
         );
 
