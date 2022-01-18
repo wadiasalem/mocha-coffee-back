@@ -20,7 +20,8 @@ class CreateCommandesTable extends Migration
             $table->foreignId('employer')
                 ->constrained('employers')
                 ->onUpdate('cascade')
-                ->onDelete('cascade');
+                ->onDelete('cascade')
+                ->nullable();
             $table->foreignId('table')
                 ->constrained('tables')
                 ->onUpdate('cascade')
