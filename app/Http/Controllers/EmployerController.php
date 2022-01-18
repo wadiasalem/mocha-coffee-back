@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category_Employer;
 use App\Models\Commande;
 use App\Models\Employer;
 use App\Models\User;
@@ -22,10 +23,11 @@ class EmployerController extends Controller
         $user  = User::create($userData);
 
         if($user){
+            $category = Category_Employer::where('name',$request->category)->first()->id;
             $Employer = [
                 'user'=>$user->id,
                 'name'=>$request->name,
-                'category'=>$request->category,
+                'category'=>$category,
                 'phone'=>$request->phone,
                 'cin'=>$request->cin,
                 'birthday'=>$request->birthday,
