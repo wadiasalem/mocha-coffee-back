@@ -160,6 +160,8 @@ class LoginController extends Controller
             'points' => 0,
         ]);
 
+        Auth::login($user);
+
         $token = $user->createToken('api-application')->accessToken;
 
         return response()->json([
