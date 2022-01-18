@@ -17,21 +17,18 @@ class CreateCommandesTable extends Migration
             $table->id();
             $table->string('category')
                 ->default('locally');
-            $table->foreignId('employer')
+            $table->foreignId('employer')->nullable(true)
                 ->constrained('employers')
                 ->onUpdate('cascade')
-                ->onDelete('cascade')
-                ->nullable(true);
-            $table->foreignId('table')
+                ->onDelete('cascade');
+            $table->foreignId('table')->nullable(true)
                 ->constrained('tables')
                 ->onUpdate('cascade')
-                ->onDelete('cascade')
-                ->nullable(true);
-            $table->foreignId('client')
+                ->onDelete('cascade');
+            $table->foreignId('client')->nullable(true)
                 ->constrained('clients')
                 ->onUpdate('cascade')
-                ->onDelete('cascade')
-                ->nullable(true);
+                ->onDelete('cascade');
             $table->timestamp('served_at')
                 ->nullable(true)
                 ->default(null);
