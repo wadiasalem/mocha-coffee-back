@@ -15,7 +15,6 @@ class Employer extends Model
         'category',
         'phone',
         'cin',
-        'birthday',
     ];
     
     function getUser(){

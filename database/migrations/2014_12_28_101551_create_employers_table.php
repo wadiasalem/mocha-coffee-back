@@ -18,7 +18,6 @@ class CreateEmployersTable extends Migration
             $table->string('name');
             $table->integer('phone',false,true)->unique();
             $table->integer('cin',false,true)->unique();
-            $table->date('birthday');
             $table->foreignId('user')
                     ->constrained('users')
                     ->onUpdate('cascade')
