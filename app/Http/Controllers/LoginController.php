@@ -162,14 +162,14 @@ class LoginController extends Controller
 
         Auth::login($user);
 
-        $token = $user->createToken('api-application')->accessToken;
+        $token = Auth::user()->createToken('authToken')->accessToken;
 
         return response()->json([
             'status' => 'success',
             'description'=>'Creation successfully',
             'user' => $user,
             'client' => $client,
-            'token' => $token
+            'access_token' => $token
         ],201);
         
 
