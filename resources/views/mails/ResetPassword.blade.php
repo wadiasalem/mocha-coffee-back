@@ -3,7 +3,7 @@
 
 Reset or change your password.
 
-@component('mail::button', ['url' => 'http://localhost:4200/auth/change-password?token='.$token])
+@component('mail::button', ['url' => 'https://mocha--coffee.herokuapp.com/auth/change-password?token='.$token])
 Change Password
 @endcomponent
 
