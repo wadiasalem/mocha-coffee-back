@@ -48,7 +48,7 @@ class GiftController extends Controller
     function get_gifts_filter(Request $request){
 
         $gifts = Gift::where('name','like','%'.$request->name.'%')
-            ->havingBetween('price',[$request->min,$request->max])
+            ->whereBetween('price',[$request->min,$request->max])
             ->orderBy($request->sort,$request->by)
             ->get();
             
