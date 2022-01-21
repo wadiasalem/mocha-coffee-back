@@ -19,7 +19,7 @@ class CreateReservationsTable extends Migration
                 ->constrained('clients')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            $table->foreignId('table')
+            $table->foreignId('table_id')
                 ->constrained('tables')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
