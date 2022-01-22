@@ -23,6 +23,10 @@ class CreateReservationsTable extends Migration
                 ->constrained('tables')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
+            $table->integer('normal',false,true)
+                ->default(1);
+            $table->integer('child',false,true)
+                ->default(0);
             $table->dateTime('date_start');
             $table->dateTime('date_end');
             $table->timestamps();

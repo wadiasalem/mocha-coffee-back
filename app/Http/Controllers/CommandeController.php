@@ -126,7 +126,7 @@ class CommandeController extends Controller
 
     function getCommands_Employer(){
         $user_category = User::find(Auth::user()->id)->getMoreDetails->category ;
-        if($user_category == 5){
+        if($user_category == 1){
             $commands = Commande::where('category','local')->get();
         }else{
             $commands = Commande::where('category','delivery')->get();
