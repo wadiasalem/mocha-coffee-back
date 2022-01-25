@@ -25,6 +25,7 @@ class CreateCommandeDetailsTable extends Migration
                 ->onDelete('cascade');
             $table->integer('quantity',false,true)
                 ->default(1);
+            $table->timestamps();
         });
     }
 

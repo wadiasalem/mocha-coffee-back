@@ -27,22 +27,28 @@ class CommandeDetailController extends Controller
 
         $today = Commande_detail::where('created_at','like',$date->format('Y-m-d').'%')->get();
         foreach ($today as $value) {
+            $category = $value->getCommand->category;
+            if($category == 'served' || $category == 'delivered')
             $data['today'] += ($value->quantity * $value->getProduct->price);
         }
 
         $month = Commande_detail::where('created_at','like',$date->format('Y-m').'%')->get();
         foreach ($month as $value) {
+            $category = $value->getCommand->category;
+            if($category == 'served' || $category == 'delivered')
             $data['month'] += ($value->quantity * $value->getProduct->price);
         }
 
         $year = Commande_detail::where('created_at','like',$date->format('Y').'%')->get();
         foreach ($year as $value) {
+            $category = $value->getCommand->category;
+            if($category == 'served' || $category == 'delivered')
             $data['year'] += ($value->quantity * $value->getProduct->price);
         }
 
         return response()->json([
+            'status'=>true,
             'data'=>$data,
-            'test' => $date->format('Y-m-d').'%'
         ]);
     }
 }

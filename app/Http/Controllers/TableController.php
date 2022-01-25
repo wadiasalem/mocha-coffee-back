@@ -145,8 +145,9 @@ class TableController extends Controller
                 ]);
                 $total +=  $product->price * $det->quantity;
             }
-            $employer = Employer::find($value->employer)->name;
+            $employer = Employer::find($value->employer)?->name;
             array_push($data,['commande'=>$value,'detaill'=>$detailData,'total'=>$total,'employer'=>$employer]);
+            if($value->category == 'served')
             $dayTotal += $total ;
         }
 

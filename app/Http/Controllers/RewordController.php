@@ -80,9 +80,8 @@ class RewordController extends Controller
                     'image'=> $image,
                 ]);
             }
-            
         }
-        if(count($rewords)){
+        if(count($data)){
             return response()->json([
                 'status'=>true,
                 'rewords'=> $data

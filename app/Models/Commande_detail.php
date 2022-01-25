@@ -15,10 +15,9 @@ class Commande_detail extends Model
         'quantity'
     ];
 
-    public $timestamps = false;
     
     function getCommand(){
-        return $this->belongsTo(Command::class,'command','id');
+        return $this->belongsTo(Commande::class,'commande','id');
     }
 
     function getProduct(){
