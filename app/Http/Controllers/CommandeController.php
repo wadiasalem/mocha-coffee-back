@@ -164,7 +164,7 @@ class CommandeController extends Controller
 
         $today = Commande::where([
             ['employer',$user],
-            ['served_at','like',$date->format('Y-m-d').'%']
+            ['served_at','ILIKE',$date->format('Y-m-d').'%']
             ])->get();
         return response()->json([
             'status' => 'success',

@@ -96,7 +96,7 @@ class EmployerController extends Controller
 
         $today = Commande::where([
             ['employer',$employer->id],
-            ['served_at','like',$date->format('Y-m-d').'%']
+            ['served_at','ILIKE',$date->format('Y-m-d').'%']
             ])->get();
             return response()->json([
                 'status'=>'success',

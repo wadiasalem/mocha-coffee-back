@@ -128,7 +128,7 @@ class TableController extends Controller
 
         $commandes = Commande::where([
             ['table_id','=',$table->id],
-            ['created_at','like',$date->format('Y-m-d').'%']
+            ['created_at','ILIKE',$date->format('Y-m-d').'%']
             ])->get();
 
         $data = [] ;

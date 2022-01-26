@@ -7,13 +7,18 @@
     "require": {
         "php": "^7.3|^8.0",
         "fruitcake/laravel-cors": "^2.0",
+        "google/cloud-firestore": "^1.20",
+        "grpc/grpc": "1.38",
         "guzzlehttp/guzzle": "^7.4",
+        "kreait/firebase-php": "^6.0",
+        "kreait/laravel-firebase": "^4.0",
         "laravel/framework": "^8.65",
         "laravel/passport": "^10.1",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.4",
-        "pusher/pusher-php-server": "^7.0"
+        "pusher/pusher-php-server": "^7.0",
+        "svk/yc-grpc-injector": "^0.0.1"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
