@@ -96,6 +96,7 @@ Route::middleware(['auth:api'])
         //manage-rewords
         Route::post('addReword',[RewordController::class,'addReword']);
         Route::get('getRewords',[RewordController::class,'getRewordsAdmin']);
+        Route::delete('deleteReword',[RewordController::class,'deleteReword']);
     });
 
     //for table

@@ -113,4 +113,26 @@ class RewordController extends Controller
         }
 
     }
+
+
+    function deleteReword(Request $request){
+        $reword = Reword::find($request['id']);
+        if(!is_null($reword)){
+            $imageReference = app('firebase.storage')->getBucket()->object($reword->image );  
+            if($imageReference->exists()) { 
+                $imageReference->delete();
+            }
+                $reword->delete();
+                return response()->json([
+                    'status'=>true,
+                    'description'=>'Reword deleted'
+                ],200);
+            
+        }else{
+                return response()->json([
+                    'status'=>false,
+                    'description'=>'Not found'
+                ],404);
+            }
+    }
 }
