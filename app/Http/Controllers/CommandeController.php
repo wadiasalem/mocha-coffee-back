@@ -9,13 +9,12 @@ use App\Models\Commande;
 use App\Models\Commande_detail;
 use App\Models\Product;
 use App\Models\User;
+use App\Services\Payment;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Mail;
-
-use function PHPUnit\Framework\isNull;
+use Nette\Utils\Arrays;
 
 class CommandeController extends Controller
 {
@@ -38,6 +37,28 @@ class CommandeController extends Controller
 
     function clientOrder(Request $request){
         $client = User::find(Auth::user()->id);
+        $amount = 0 ;
+
+        foreach ($request['order'] as $value) {
+            if($value){
+                $product = Product::find($value['id']);
+                if($product){
+                    $amount += $value['quantity']*$product->price;
+                }
+                
+            }
+            
+        }
+        $payment = new Payment();
+        $payment->pay($request->payment,$amount);
+
+        if($payment->hasError()){
+            return response()->json([
+                'status'=>false,
+                'description'=>$payment->getError()
+            ],400);
+        }
+        
         $commande= Commande::create([
             'category'=>'delivery',
             'client'=> $client->getMoreDetails->id
@@ -56,10 +77,7 @@ class CommandeController extends Controller
                     ]);
                 array_push($detail,$item);
                 }else{
-                    $commande->delete();
-                    foreach ($detail as $value) {
-                        $value->delete();
-                    }
+                    $this->cancelCommande($commande,$detail);
                     return response()->json([
                         'status'=>'error',
                         'description'=> $value['name'].' not exist'
@@ -70,19 +88,21 @@ class CommandeController extends Controller
             
         }
 
-        Mail::to($client->email)->send(new CommandDoneMail($detail,$client->name));
+            Mail::to($client->email)->send(new CommandDoneMail($detail,$client->name));
         
         return response()->json([
             'status'=>'success',
             'description'=>'Order successfully'
         ],200);
         
+
     }
 
     function buy(Request $request){
         $user = null ;
         if(!is_null($request->client['email']))
             $user = User::where('email',$request->client['email'])->first()->getMoreDetails->id;
+
 
 
         $commande= Commande::create([
@@ -104,10 +124,7 @@ class CommandeController extends Controller
                 ]);
                 array_push($detail,$item);
                 }else{
-                    $commande->delete();
-                    foreach ($detail as $value) {
-                        $value->delete();
-                    }
+                    $this->cancelCommande($commande,$detail);
                     return response()->json([
                         'status'=>'error',
                         'description'=> $value['name'].' not exist'
@@ -231,6 +248,13 @@ class CommandeController extends Controller
                 'status' => 'error',
                 'description' => 'Command Not Found'
             ],404);
+        }
+    }
+
+    function cancelCommande(Commande $commande,array $detail){
+        $commande->delete();
+        foreach ($detail as $value) {
+            $value->delete();
         }
     }
 }

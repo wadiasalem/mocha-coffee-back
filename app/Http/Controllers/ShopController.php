@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\User;
 use App\Models\Shop;
 use App\Models\Shop_detail;
+use App\Services\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,6 +32,29 @@ class ShopController extends Controller
     }
 
     function shop(Request $request){
+        $amount = 0 ;
+
+        foreach ($request['cart']  as $value) {
+            if($value){
+                $gift = Gift::find($value['id']);
+                if($gift){
+                    $amount += $value['quantity']*$gift->price;
+                }
+                
+            }
+            
+        }
+        
+        $payment = new Payment();
+        $payment->pay($request->payment,$amount);
+
+        if($payment->hasError()){
+            return response()->json([
+                'status'=>false,
+                'description'=>$payment->getError()
+            ],400);
+        }
+
         $shop = Shop::create([
             'client'=> User::find(Auth::user()->id)->getMoreDetails->id
         ]);
