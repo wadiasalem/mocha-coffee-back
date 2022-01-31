@@ -16,7 +16,7 @@ class ShopController extends Controller
 {
     function getGifts(){
         $idClient = User::find(Auth::user()->id)->getMoreDetails->id;
-        $commandes = Shop::where('client',$idClient)->get();
+        $commandes = Shop::where('client',$idClient)->orderBy("id","desc")->get();
         $data = [];
         foreach ($commandes as $value) {
             $detail = Shop_detail::where('shop',$value->id)->get();

@@ -21,8 +21,8 @@ class CommandeController extends Controller
 {
 
     function getOrders(){
-        $idClient = User::find(Auth::user()->id)->getMoreDetails->id;
-        $Orders = Commande::where('client',$idClient)->get();
+        $idClient = Auth::user()->getMoreDetails->id;
+        $Orders = Commande::where('client',$idClient)->orderBy("id","desc")->get();
         $data = [];
         foreach ($Orders as $value) {
             $detail = Commande_detail::where('commande',$value->id)->get();
