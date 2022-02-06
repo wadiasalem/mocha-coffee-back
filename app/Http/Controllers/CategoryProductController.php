@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Category_Product;
 
-use function PHPUnit\Framework\isEmpty;
-
 class CategoryProductController extends Controller
 {
     function get_menu(){

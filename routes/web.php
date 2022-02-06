@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,4 +16,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get("/",function(){
   return 'Mocha-coffee work';
+});
+
+Route::post("test",function(Request $request){
+  return $request->input();
+  return $request;
 });

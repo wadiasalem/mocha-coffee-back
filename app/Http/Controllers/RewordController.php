@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reword;
+
 use Carbon\Carbon;
-use Defuse\Crypto\File;
 use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Kreait\Laravel\Firebase\Facades\Firebase;
 
 class RewordController extends Controller

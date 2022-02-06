@@ -104,7 +104,7 @@ Route::middleware(['auth:api'])
     ->prefix('table')
     ->group(function () {
         Route::post('logout',[TableController::class,'logoutCheck']);
-        Route::post('buy',[CommandeController::class,'buy']);
+        Route::post('buy',[CommandeController::class,'tableOrder']);
     });
 
 
@@ -129,6 +129,7 @@ Route::middleware(['auth:api'])
         Route::post('register', [LoginController::class,'register']);
         Route::post('reset-password-request', [passwordResetController::class, 'sendPasswordResetEmail']);
         Route::post('change-password', [ChangePasswordController::class, 'passwordResetProcess']);
+        Route::post('refresh-token', [LoginController::class, 'RefreshToken']);
     });
 
     // gifts api

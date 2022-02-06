@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
@@ -28,6 +29,8 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Schema::defaultStringLength(255);
+        Passport::tokensExpireIn(Carbon::now()->addDay(10));
+        Passport::refreshTokensExpireIn(Carbon::now()->addDay(30));
         Passport::routes();
         
     }

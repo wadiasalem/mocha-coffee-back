@@ -17,6 +17,8 @@ class CommandeDetailController extends Controller
 
     function InComeStat(){
 
+        $period = array('today','month','year');
+
         $date = Carbon::now();
         $date->addHours(1);
         $data = [
@@ -25,30 +27,25 @@ class CommandeDetailController extends Controller
             'year' =>0
         ];
 
-        $today = Commande_detail::where('created_at','ILIKE',$date->format('Y-m-d').'%')->get();
-        foreach ($today as $value) {
-            $category = $value->getCommand->category;
-            if($category == 'served' || $category == 'delivered')
-            $data['today'] += ($value->quantity * $value->getProduct->price);
-        }
-
-        $month = Commande_detail::where('created_at','ILIKE',$date->format('Y-m').'%')->get();
-        foreach ($month as $value) {
-            $category = $value->getCommand->category;
-            if($category == 'served' || $category == 'delivered')
-            $data['month'] += ($value->quantity * $value->getProduct->price);
-        }
-
-        $year = Commande_detail::where('created_at','ILIKE',$date->format('Y').'%')->get();
-        foreach ($year as $value) {
-            $category = $value->getCommand->category;
-            if($category == 'served' || $category == 'delivered')
-            $data['year'] += ($value->quantity * $value->getProduct->price);
+        for ($i=0; $i < 3; $i++) { 
+            $format = substr("Y-m-d", 0, 5 - $i*2);
+            $data = Commande_detail::where('created_at','ILIKE',$date->format($format).'%')->get();
+            $data[$period[$i]]  = $this->calcultIncom($data);
         }
 
         return response()->json([
             'status'=>true,
             'data'=>$data,
         ]);
+    }
+
+    function calcultIncom($commands){
+        $result = 0 ;
+        foreach ($commands as $value) {
+            $category = $value->getCommand->category;
+            if($category == 'served' || $category == 'delivered')
+            $result += ($value->quantity * $value->getProduct->price);
+        }
+        return $result ;
     }
 }

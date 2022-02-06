@@ -7,14 +7,13 @@ use App\Models\Commande;
 use App\Models\Commande_detail;
 use App\Models\Employer;
 use App\Models\Product;
-use App\Models\Reservation;
 use App\Models\Table;
 use App\Models\User;
+
 use Carbon\Carbon;
-use Dflydev\DotAccessData\Data;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -52,33 +51,33 @@ class TableController extends Controller
             ],404);
 
 
-        $user  = User::create($userData);
-
-        if($user){
-            $tableData = [
-                'user'=>$user->id,
-                'table_number'=>$request->table_number
-            ];
-            $table =  Table::create($tableData);
-            if($table){
+        try{
+            $user  = User::create($userData);
+            try{
+                $tableData = [
+                    'user'=>$user->id,
+                    'table_number'=>$request->table_number
+                ];
+                $table =  Table::create($tableData);
                 return response()->json([
                     'status'=>'success',
                     'user' => $user,
                     'table' => $table
                 ],200);
-            }else{
+            }catch(QueryException $exception){
                 $user ->delete();
                 return response()->json([
                     'status'=>'error',
                     'discription'=>'internal error in creating table'
                 ],404);
             }
-        }else{
+        }catch(QueryException $exception){
             return response()->json([
                 'status'=>'error',
                 'discription'=>'internal error in creating user'
             ],404);
         }
+        
     }
 
     function deleteTable(Request $request){

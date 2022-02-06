@@ -13,7 +13,9 @@ class GiftController extends Controller
     function get_gifts_byId(Request $request){
         $result = [];
         foreach ($request->gifts as $value) {
-            array_push($result,Gift::find($value['gift']));
+            $gift = Gift::find($value['gift']);
+            if(!is_null($gift)) 
+                array_push($result,$gift);
         }
 
         if(count($result)){
@@ -30,7 +32,6 @@ class GiftController extends Controller
     }
 
     function get_gifts(){
-
         $gifts = Gift::all();
         if(count($gifts))
             return response()->json([
@@ -52,8 +53,6 @@ class GiftController extends Controller
             ->orderBy($request->sort,$request->by)
             ->get();
             
-        
-
         if(count($gifts))
             return response()->json([
                 'status' => 'success',
@@ -68,11 +67,10 @@ class GiftController extends Controller
 
     function updateGift(Request $request){
         $gift = Gift::find($request->id);
-        if($gift){
+        if(!is_null($gift)){
             $gift->update([
                 $request->toDo => $request->value
             ]);
-
             return response()->json([
                 'status' => 'success',
                 'description' => 'Update Done',

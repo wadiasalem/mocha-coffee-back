@@ -32,6 +32,8 @@ class CreateCommandesTable extends Migration
             $table->timestamp('served_at')
                 ->nullable(true)
                 ->default(null);
+            $table->integer('amount',false,false)
+                ->default(0);
             $table->timestamps();
         });
     }

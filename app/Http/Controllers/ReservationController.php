@@ -37,7 +37,7 @@ class ReservationController extends Controller
         $date_start = new Carbon($request->date,'GMT+0');
         $date_end = new Carbon($request->date,'GMT+0');
         $date_end ->add(1,'hour');
-        $client = User::find(Auth::user()->id)->getMoreDetails; 
+        $client = Auth::user()->getMoreDetails; 
 
         foreach ($request->table as $value) {
             $table = Table::where('table_number',$value)->first();

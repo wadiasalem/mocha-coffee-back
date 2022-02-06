@@ -6,7 +6,6 @@ use Illuminate\Broadcasting\Channel;
 use Illuminate\Database\Eloquent\BroadcastsEvents;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
 
 class Commande extends Model
 {
@@ -17,7 +16,8 @@ class Commande extends Model
         'employer',
         'table_id',
         'client',
-        'served_at'
+        'served_at',
+        'amount'
     ];
 
     function getBuyer(){

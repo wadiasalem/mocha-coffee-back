@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdatePasswordRequest;
-use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+
+use App\Models\User;
 
 class ChangePasswordController extends Controller
 {
@@ -15,10 +16,10 @@ class ChangePasswordController extends Controller
   
       // Verify if token is valid
       private function updatePasswordRow($request){
-         return DB::table('password_resets')->where([
-             'email' => $request->email,
-             'token' => $request->passwordToken
-         ]);
+        return DB::table('password_resets')->where([
+            'email' => $request->email,
+            'token' => $request->passwordToken
+        ]);
       }
   
       // Token not found response

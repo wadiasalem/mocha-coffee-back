@@ -8,9 +8,13 @@ use App\Models\Employer;
 use App\Models\Role;
 use App\Models\Table;
 use App\Models\User;
+use Laravel\Passport\Client as OClient; 
+use Illuminate\Database\QueryException;
 use Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Route;
 
 class LoginController extends Controller
 {
@@ -21,6 +25,7 @@ class LoginController extends Controller
      * @return token if valid
      */
     function Login(Request $request){
+
 
         // validation of api parametre
         $validate = Validator::make($request->all(),[
@@ -35,19 +40,8 @@ class LoginController extends Controller
             ],409);
         }
 
-        //cheking the type of the login email or username
-        $login_type = filter_var($request->input('login'), FILTER_VALIDATE_EMAIL ) 
-        ? 'email' 
-        : 'username';
+        $login = $this->getLogin($request['login'],$request['password']);
 
-        if($login_type == 'username'){
-            $email = User::where('user_name',$request['login']) -> first() ?-> email;
-            $login = ['email'=>$email , 'password' => $request['password']] ;
-        }else{
-            $login = ['email'=>$request['login'] , 'password' => $request['password']] ;
-        }
-
-        
         //login the user with email and password 
         if(!Auth::attempt($login,$request['remember'])){
             return response()->json([
@@ -56,50 +50,10 @@ class LoginController extends Controller
             ],404);
         }
         
-        $Token = Auth::user()->createToken('authToken')->accessToken;
+        //$Token = Auth::user()->createToken('authToken')->accessToken;
+        $Token = $this->getTokenAndRefreshToken( $request['login'], $request['password'],$request);
         
-        switch (Auth::user()->role) {
-            case 2:
-                $more = Client::find(User::find(Auth::user()->id)->getMoreDetails->id);
-                return response()->json([
-                    'status' => 'success',
-                    'description' => 'Connection successfully',
-                    'user'=>Auth::user(),
-                    'client' => $more,
-                    'access_token'=>$Token
-                    ],200);
-                break;
-            case 3:
-                $more = Table::find(User::find(Auth::user()->id)->getMoreDetails->id);
-                return response()->json([
-                    'status' => 'success',
-                    'description' => 'Connection successfully',
-                    'user'=>Auth::user(),
-                    'table' => $more,
-                    'access_token'=>$Token
-                    ],200);
-                break;
-            case 4:
-                $more = Employer::find(User::find(Auth::user()->id)->getMoreDetails->id);
-                return response()->json([
-                    'status' => 'success',
-                    'description' => 'Connection successfully',
-                    'user'=>Auth::user(),
-                    'employer' => $more,
-                    'category' => Category_Employer::find($more->category)->name,
-                    'access_token'=>$Token
-                    ],200);
-                break;
-            
-            default:
-                return response()->json([
-                    'status' => 'success',
-                    'description' => 'Connection successfully',
-                    'user'=>Auth::user(),
-                    'access_token'=>$Token
-                ],200);
-                break;
-        }
+        return $this->returnData(Auth::user()->role,$Token);
     }
 
 
@@ -107,7 +61,8 @@ class LoginController extends Controller
 
     function Logout(Request $request){
         $request->user()
-                ->token()->delete();
+                ->token()
+                ->delete();
         return response()->json([
             'status' => 'success',
         ],200);
@@ -149,30 +104,145 @@ class LoginController extends Controller
             ],409);
         }
 
-        $data = $request->all();
-        $data['role'] = Role::where('name','client') -> first()-> id;
-        $data['password'] = bcrypt($data['password']);
+        $Register['role'] = Role::where('name','client') -> first()-> id;
+        $Register['password'] = bcrypt($Register['password']);
 
-        $user = User::create($data);
-        $client = Client::create([
-            'name'=> $data['name'],
-            'user' => $user->id,
-            'points' => 0,
-        ]);
+        try{
+            $user = User::create($Register);
+            try{
+                $client = Client::create([
+                    'name'=> $Register['name'],
+                    'user' => $user->id,
+                    'points' => 0,
+                ]);
+                Auth::login($user);
+                $token = Auth::user()->createToken('authToken')->accessToken;
 
-        Auth::login($user);
-
-        $token = Auth::user()->createToken('authToken')->accessToken;
-
-        return response()->json([
-            'status' => 'success',
-            'description'=>'Creation successfully',
-            'user' => $user,
-            'client' => $client,
-            'access_token' => $token
-        ],201);
+                return response()->json([
+                    'status' => 'success',
+                    'description'=>'Creation successfully',
+                    'user' => $user,
+                    'client' => $client,
+                    'access_token' => $token
+                ],201);
+            }catch(QueryException $exception){
+                return response()->json([
+                    'status' => false,
+                    'description' => 'Internal error'
+                ],400);
+                $user->delete;
+            }
+        }catch(QueryException $exception){
+            return response()->json([
+                'status' => false,
+                'description' => 'Internal error'
+            ],400);
+        }
         
+    }
+
+    function getLogin($login,$password){
+        //cheking the type of the login email or username
+        $login_type = filter_var($login, FILTER_VALIDATE_EMAIL ) 
+        ? 'email' 
+        : 'username';
+
+        if($login_type == 'username'){
+            $email = User::where('user_name',$login) -> first() ?-> email;
+            return ['email'=>$email , 'password' => $password] ;
+        }else{
+            return ['email'=>$login , 'password' => $password] ;
+        }
+    }
+
+    function returnData($role,$Token){
+        switch ($role) {
+            case 2:
+                $more = Client::find(User::find(Auth::user()->id)->getMoreDetails->id);
+                return response()->json([
+                    'status' => 'success',
+                    'description' => 'Connection successfully',
+                    'user'=>Auth::user(),
+                    'client' => $more,
+                    'token'=>$Token
+                    ],200);
+                break;
+            case 3:
+                $more = Table::find(User::find(Auth::user()->id)->getMoreDetails->id);
+                return response()->json([
+                    'status' => 'success',
+                    'description' => 'Connection successfully',
+                    'user'=>Auth::user(),
+                    'table' => $more,
+                    'token'=>$Token
+                    ],200);
+                break;
+            case 4:
+                $more = Employer::find(User::find(Auth::user()->id)->getMoreDetails->id);
+                return response()->json([
+                    'status' => 'success',
+                    'description' => 'Connection successfully',
+                    'user'=>Auth::user(),
+                    'employer' => $more,
+                    'category' => Category_Employer::find($more->category)->name,
+                    'token'=>$Token
+                    ],200);
+                break;
+            
+            default:
+                return response()->json([
+                    'status' => 'success',
+                    'description' => 'Connection successfully',
+                    'user'=>Auth::user(),
+                    'token'=>$Token
+                ],200);
+                break;
+        }
+    }
+
+    public function getTokenAndRefreshToken( $email, $password,$request) { 
+        
+        $oClient = OClient::where("name","mocha-token")->first();
+        $parm = [
+            'grant_type' => 'password',
+            'client_id' => $oClient->id,
+            'client_secret' => $oClient->secret,
+            'username' => $email,
+            'password' => $password,
+            'scope' => '*'
+        ];
+        $request->merge($parm);
+
+        $request = Request::create('/oauth/token', "post" ,$parm);
+        $request->headers->set("Content-Type","application/json");
+        
+        $response = Route::dispatch($request);
+        
+        
+        $result = json_decode((string) $response->content(), true);
+        return $result;
+    }
+
+    public function RefreshToken(Request $request) { 
 
         
+        $oClient = OClient::where("name","mocha-token")->first();
+        $parm = [
+            'grant_type' => 'refresh_token',
+            'refresh_token' => $request->refresh,
+            'client_id' => $oClient->id,
+            'client_secret' => $oClient->secret,
+            'scope' => '*',
+        ];
+        $request->merge($parm);
+
+        $request = Request::create('/oauth/token', "post" ,$parm);
+        $request->headers->set("Content-Type","application/json");
+        
+        $response = Route::dispatch($request);
+        
+        
+        $result = json_decode((string) $response->content(), true);
+        return response()->json($result,200);
     }
 }
