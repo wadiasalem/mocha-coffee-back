@@ -13,7 +13,6 @@ use Illuminate\Database\QueryException;
 use Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
 class LoginController extends Controller
@@ -104,19 +103,21 @@ class LoginController extends Controller
             ],409);
         }
 
-        $Register['role'] = Role::where('name','client') -> first()-> id;
-        $Register['password'] = bcrypt($Register['password']);
+        $request['role'] = Role::where('name','client') -> first()-> id;
+        $password = $request['password'];
+        $request['password'] = bcrypt($request['password']);
 
         try{
-            $user = User::create($Register);
+            $user = User::create($request->all());
             try{
                 $client = Client::create([
-                    'name'=> $Register['name'],
+                    'name'=> $request['name'],
                     'user' => $user->id,
                     'points' => 0,
                 ]);
                 Auth::login($user);
-                $token = Auth::user()->createToken('authToken')->accessToken;
+                $token = $this->getTokenAndRefreshToken( $request['email'], $password ,$request);
+                //$token = Auth::user()->createToken('authToken')->accessToken;
 
                 return response()->json([
                     'status' => 'success',
