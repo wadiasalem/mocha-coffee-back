@@ -50,7 +50,7 @@ class LoginController extends Controller
         }
         
         //$Token = Auth::user()->createToken('authToken')->accessToken;
-        $Token = $this->getTokenAndRefreshToken( $request['login'], $request['password'],$request);
+        $Token = $this->getTokenAndRefreshToken( $login['email'], $request['password'],$request);
         
         return $this->returnData(Auth::user()->role,$Token);
     }
@@ -124,7 +124,7 @@ class LoginController extends Controller
                     'description'=>'Creation successfully',
                     'user' => $user,
                     'client' => $client,
-                    'access_token' => $token
+                    'token' => $token
                 ],201);
             }catch(QueryException $exception){
                 return response()->json([
